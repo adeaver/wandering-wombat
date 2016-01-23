@@ -3,7 +3,6 @@ from pymongo import MongoClient
 import re, time
 
 def get_attractions_from_page(url, city, client):
-    attractions = []
 
     while True:
         try:
@@ -18,12 +17,12 @@ def get_attractions_from_page(url, city, client):
 
     for index in range(1, len(properties)):
         attraction = get_attraction(properties[index])
-        attraction['categories'] = get_attraction_details(attraction["url"])
+        attraction['categories'] = get_attraction_details(attraction["url"], attraction["name"])
 
         if(len(attraction['categories']) > 0):
-            client.insert({"city":city, "name":attraction["name"], "url":attraction["url"], "review_count":attraction["review_count"]})
-
-    return attractions
+            client.insert({"city":city, "name":attraction["name"], "_id":attraction["url"], "review_count":attraction["review_count"], "categories":attraction["categories"]})
+        else:
+            print "Error on: " + attraction["name"]
 
 def get_attraction(prop):
     # define attraction container
@@ -50,7 +49,7 @@ def get_attraction(prop):
 
     return attraction
 
-def get_attraction_details(attraction_url):
+def get_attraction_details(attraction_url, attraction_name):
     while True:
         try:
             html = download(attraction_url)
@@ -62,7 +61,9 @@ def get_attraction_details(attraction_url):
 
     # get the descriptions of the location in the ugliest line of code I've ever written
     try:
-        details = html.split("div class=\"detail\">")[1].split("</div>")[0]
+        detailsplit = html.split("div class=\"detail\">")
+        split_loc = 1 if "Neighborhood:" not in detailsplit[1] or len(detailsplit)==2 else 2
+        details = detailsplit[split_loc].split("</div>")[0]
     except IndexError:
         return []
 
