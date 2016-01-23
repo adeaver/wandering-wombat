@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.khite.wanderingwombats" >
-    <uses-permission android:name="android.permission.BLUETOOTH"/>
-    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN"/>
+
+    <uses-permission android:name="android.permission.BLUETOOTH" />
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
 
     <application
         android:allowBackup="true"
@@ -25,6 +26,14 @@
         <activity
             android:name=".DisplayMapActivity"
             android:label="@string/title_activity_display_map" >
+        </activity>
+        <activity
+            android:name=".NewTripActivity"
+            android:label="@string/title_activity_new_trip" >
+        </activity>
+        <activity
+            android:name=".TripDisplayActivity"
+            android:label="@string/title_activity_trip_display" >
         </activity>
     </application>
 

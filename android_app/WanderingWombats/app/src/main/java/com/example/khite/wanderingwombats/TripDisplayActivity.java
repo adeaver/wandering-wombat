@@ -7,23 +7,23 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
-public class MainMenuActivity extends AppCompatActivity {
+public class TripDisplayActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main_menu);
+        setContentView(R.layout.activity_trip_display);
     }
 
     public void openDisplayMapActivity(View view){
-        Intent intent = new Intent(this, NewTripActivity.class);
+        Intent intent = new Intent(this, DisplayMapActivity.class);
         startActivity(intent);
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main_menu, menu);
+        getMenuInflater().inflate(R.menu.menu_trip_display, menu);
         return true;
     }
 
