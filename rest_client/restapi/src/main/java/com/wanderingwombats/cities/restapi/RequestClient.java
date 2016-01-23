@@ -46,6 +46,10 @@ public class RequestClient {
 			returnValue.put("response", container.get("response"));
 			returnValue.put("cities", cityNamesStrings);
 			
+			for(String cityName : cityNamesStrings) {
+				JSONArray cityInfo = data.getJSONArray(cityName);
+				returnValue.put(cityName, jsonArrayToStringArray(cityInfo));
+			}
 			
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
