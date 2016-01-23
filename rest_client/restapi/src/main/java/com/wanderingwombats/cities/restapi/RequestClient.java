@@ -37,6 +37,8 @@ public class RequestClient {
 				finalResponse += line;
 			}
 			
+			System.err.println(finalResponse);
+			
 			JSONObject container = new JSONObject(finalResponse);
 			JSONObject data = container.getJSONObject("data");
 			
