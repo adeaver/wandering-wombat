@@ -2,7 +2,7 @@ from pattern.web import download
 from pymongo import MongoClient
 import re, time
 
-def get_attractions_from_page(url):
+def get_attractions_from_page(url, city, client):
     attractions = []
 
     while True:
@@ -21,7 +21,7 @@ def get_attractions_from_page(url):
         attraction['categories'] = get_attraction_details(attraction["url"])
 
         if(len(attraction['categories']) > 0):
-            attractions.append(attraction)
+            client.insert({"city":city, "name":attraction["name"], "url":attraction["url"], "review_count":attraction["review_count"]})
 
     return attractions
 
@@ -138,26 +138,17 @@ f = open("city_urls.txt", "r")
 cities = f.readlines()
 
 client = MongoClient()
-attractions = client.cities.attractions
+points = client.wombats.points
 
 for index in range(0, len(cities)):
     info = cities[index].split("*****")
 
     print "Working on... " + info[0] + " (" + str(index+1) + " of " + str(len(cities)) + ")"
 
-    all_attractions = []
     pages = get_all_pages(info[1])
 
     for page in pages:
-        all_attractions = all_attractions + get_attractions_from_page(page)
-
-    try:
-        attractions.insert({"city":info[0], "attractions":all_attractions})
-    except OverflowError:
-        print "Encountered Error... dumping to file"
-        f2 = open(info[0] + ".txt", "w")
-        f2.write(str(all_attractions))
-        f2.close()
+        get_attractions_from_page(page, info[0], points)
 
     print "Completed " + str(index+1) + " of " + str(len(cities))
 

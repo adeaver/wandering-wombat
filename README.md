@@ -20,9 +20,45 @@ PennApps XIII Project that current doesn't have a name.
 * Las Vegas
 * Denver
 
-#### Categories
-* Food Road Trip
-* Landmarks
-* National Monuments/Parks
-* Sports/Historic Stadiums
-* Historic Points
+#### Search Criteria
+* Sights & Landmarks
+** Points of Interest & Landmarks
+** Architectural Buildings
+** Religious Sites
+** Neighborhoods
+** Monuments & Statues
+** Historic Sites
+** Arenas & Stadiums
+** Churches & Cathedrals
+** Educational Sites
+
+* Museums
+** Art Galleries
+** Specialty Museums
+** Art Museums
+** History Museums
+** Children's Museums
+** Science Museums
+** Observatories & Planetariums
+
+* Nature & Parks
+** Parks
+** Beaches
+** Gardens
+** Nature & Wildlife Areas
+** Hiking Trails
+** Biking Trails
+
+* Theaters & Concerts
+** Theaters
+** Theater & Performance
+** Comedy Clubs
+** Jazz Bars
+** Blues Bars
+
+* Food & Drink
+
+* Shopping
+** Shopping Malls
+** Department Stores
+** Specialty & Gift Shops
