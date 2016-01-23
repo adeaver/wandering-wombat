@@ -1,7 +1,7 @@
 package com.wanderingwombats.cities.restapi;
 
 public class DefaultValues {
-	public static final String BASE_URL = "127.0.0.1";
+	public static final String BASE_URL = "http://127.0.0.1:5000";
 	
 	public static final String LANDMARKS = "Points of Interest and Landmarks";
 	public static final String ARCHITECTURE = "Architectural Buildings";

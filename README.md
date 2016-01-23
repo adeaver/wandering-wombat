@@ -2,7 +2,7 @@
 PennApps XIII Project that current doesn't have a name.
 
 #### Destination Cities
-* Boston
+* ~~Boston~~
 * Philadelphia
 * New York City
 * Los Angeles
