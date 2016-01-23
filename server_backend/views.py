@@ -32,6 +32,12 @@ def get_locations():
             point_data.append(item["name"])
             cities[city_name] = point_data
 
+        for key in cities:
+            print key + "--" + str(cities[key])
+            city_list = cities[key]
+            city_list.sort()
+            cities[key] = db_manager.unique(city_list)
+
         cities["cities"] = cities.keys()
 
         final = dict()

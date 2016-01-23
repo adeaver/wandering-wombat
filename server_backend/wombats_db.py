@@ -14,6 +14,17 @@ class Wombats_Db():
         query = self.DB.find({"city":city_name})
         return query
 
+    def unique(self, old_list):
+        token = ""
+        new_list = []
+
+        for item in old_list:
+            if(item != token):
+                new_list.append(item)
+                token = item
+
+        return new_list
+
     def sort_results_by_review_count(self, data):
         if(len(data) == 1):
             return data
