@@ -1,9 +1,11 @@
 package com.example.khite.wanderingwombats;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -18,6 +20,11 @@ public class LoginActivity extends AppCompatActivity {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_login, menu);
         return true;
+    }
+
+    public void openMainMenuActivity(View view){
+        Intent intent = new Intent(this, MainMenuActivity.class);
+        startActivity(intent);
     }
 
     @Override
