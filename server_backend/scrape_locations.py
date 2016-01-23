@@ -1,4 +1,5 @@
 from pattern.web import download
+from pymongo import MongoClient
 import re
 
 def get_attractions_from_page(url):
@@ -110,7 +111,16 @@ def get_base_url(page):
     return [first_part, second_part]
 
 
-pages = get_all_pages("http://www.tripadvisor.com/Attractions-g60763-Activities-New_York_City_New_York.html")
+f = open("city_urls.txt", "r")
+cities = f.readlines()
 
-for page in pages:
-    print get_attractions_from_page(page)
+for city in cities:
+    info = city.split("*****")
+    print info[0]
+
+# all_attractions = []
+# pages = get_all_pages("http://www.tripadvisor.com/Attractions-g60763-Activities-New_York_City_New_York.html")
+
+# for page in pages:
+#     all_attractions = all_attractions + get_attractions_from_page(page)
+
