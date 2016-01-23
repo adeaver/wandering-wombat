@@ -114,13 +114,18 @@ def get_base_url(page):
 f = open("city_urls.txt", "r")
 cities = f.readlines()
 
-for city in cities:
-    info = city.split("*****")
-    print info[0]
+client = MongoClient()
+attractions = client.cities.attractions
 
-# all_attractions = []
-# pages = get_all_pages("http://www.tripadvisor.com/Attractions-g60763-Activities-New_York_City_New_York.html")
+for index in range(0, len(cities)):
+    info = cities[index].split("*****")
 
-# for page in pages:
-#     all_attractions = all_attractions + get_attractions_from_page(page)
+    all_attractions = []
+    pages = get_all_pages(info[1])
+
+    for page in pages:
+        all_attractions = all_attractions + get_attractions_from_page(page)
+
+    attractions.insert({"city":info[0], "attractions":all_attractions})
+    print "Completed " + str(index+1) + " of " + str(len(cities))
 
