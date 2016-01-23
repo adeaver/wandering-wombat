@@ -17,7 +17,7 @@ public class RequestClientTest extends TestCase {
 	
 	@Test
 	public void testConnection() throws JSONException {
-		HashMap<String, Object> returnValue = (HashMap<String, Object>) requestClient.makeRequest(DefaultValues.SPORTS);
+		HashMap<String, Object> returnValue = (HashMap<String, Object>) requestClient.makeRequest(DefaultValues.MUSEUMS);
 		
 		assertEquals("America is great", returnValue.get("response").toString());
 	}
