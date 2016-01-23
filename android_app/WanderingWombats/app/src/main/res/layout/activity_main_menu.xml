@@ -10,25 +10,41 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="NEW TRIP"
-        android:id="@+id/button2"
+        android:id="@+id/newTripButton"
         android:layout_marginTop="100dp"
         android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true" />
+        android:layout_centerHorizontal="true"
+        android:onClick="openDisplayMapActivity"
+        android:textSize="20dp"
+        android:width="200dp"
+        android:height="40dp"
+        android:textColor="#663366"
+        android:background="#EEDC82" />
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="PAST TRIPS"
-        android:id="@+id/button3"
+        android:id="@+id/pastTripButton"
         android:layout_centerVertical="true"
-        android:layout_centerHorizontal="true" />
+        android:layout_centerHorizontal="true"
+        android:textSize="20dp"
+        android:height="40dp"
+        android:width="200dp"
+        android:textColor="#663366"
+        android:background="#EEDC82" />
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="TRIP GALLERY"
-        android:id="@+id/button4"
+        android:id="@+id/tripGalleryButton"
         android:layout_marginBottom="87dp"
         android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true" />
+        android:layout_centerHorizontal="true"
+        android:textSize="20dp"
+        android:height="40dp"
+        android:width="200dp"
+        android:textColor="#663366"
+        android:background="#EEDC82" />
 </RelativeLayout>

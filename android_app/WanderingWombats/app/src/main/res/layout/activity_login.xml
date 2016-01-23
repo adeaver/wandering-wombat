@@ -14,7 +14,12 @@
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="52dp"
-        android:textSize="40dp" />
+        android:textSize="40dp"
+        android:textColor="#663366"
+        android:textStyle="bold"
+        android:height="60dp"
+        android:width="400dp"
+        android:gravity="center_horizontal" />
 
     <EditText
         android:layout_width="wrap_content"
@@ -25,7 +30,10 @@
         android:layout_below="@+id/textView"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="205dp"
-        android:hint="Email" />
+        android:hint="Email"
+        android:textColor="#3F3244"
+        android:width="200dp"
+        android:height="40dp" />
 
     <EditText
         android:layout_width="wrap_content"
@@ -36,7 +44,10 @@
         android:layout_below="@+id/emailText"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="36dp"
-        android:hint="Password" />
+        android:hint="Password"
+        android:textColor="#3F3244"
+        android:height="40dp"
+        android:width="200dp" />
 
     <Button
         android:layout_width="wrap_content"
@@ -46,5 +57,9 @@
         android:layout_below="@+id/passwordText"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="47dp"
-        android:onClick="openMainMenuActivity"/>
+        android:onClick="openMainMenuActivity"
+        android:textColor="#663366"
+        android:background="#EEDC82"
+        android:width="200dp"
+        android:height="40dp" />
 </RelativeLayout>
