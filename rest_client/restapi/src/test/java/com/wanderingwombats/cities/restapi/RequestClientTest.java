@@ -24,7 +24,7 @@ public class RequestClientTest extends TestCase {
 	
 	@Test
 	public void testAllConnections() throws JSONException {
-		String[] channels = {DefaultValues.ARCHITECTURE,
+		String[] channels = {DefaultValues.LANDMARKS, DefaultValues.ARCHITECTURE,
 				DefaultValues.RELIGION, DefaultValues.HISTORY, DefaultValues.SPORTS,
 				DefaultValues.MUSEUMS, DefaultValues.ART, DefaultValues.SCIENCE,
 				DefaultValues.NATURE, DefaultValues.THEATER, DefaultValues.SHOPPING};

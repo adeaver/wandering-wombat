@@ -63,5 +63,7 @@ class Wombats_Db():
     def clean(self, inp):
         output = re.sub("\'", "", inp)
         output = re.sub(":", "-", output)
+        output = re.sub("/", "-", output)
+        output = re.sub("#", "", output)
 
         return output
