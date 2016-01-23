@@ -1,6 +1,4 @@
-New York City*****http://www.tripadvisor.com/Attractions-g60763-Activities-New_York_City_New_York.html
-Chicago*****http://www.tripadvisor.com/Attractions-g35805-Activities-Chicago_Illinois.html
-Charleston*****http://www.tripadvisor.com/Tourism-g54171-Charleston_South_Carolina-Vacations.html
+Charleston*****http://www.tripadvisor.com/Attractions-g54171-Activities-Charleston_South_Carolina.html
 Las Vegas*****http://www.tripadvisor.com/Attractions-g45963-Activities-Las_Vegas_Nevada.html
 Seattle*****http://www.tripadvisor.com/Attractions-g60878-Activities-Seattle_Washington.html
 San Francisco*****http://www.tripadvisor.com/Attractions-g60713-Activities-San_Francisco_California.html
@@ -17,3 +15,5 @@ Salt Lake City*****http://www.tripadvisor.com/Attractions-g60922-Activities-Salt
 Grand Canyon*****http://www.tripadvisor.com/Attractions-g143028-Activities-Grand_Canyon_National_Park_Arizona.html
 Yosemite*****http://www.tripadvisor.com/Attractions-g61000-Activities-Yosemite_National_Park_California.html
 Orlando*****http://www.tripadvisor.com/Attractions-g34515-Activities-Orlando_Florida.html
+New York City*****http://www.tripadvisor.com/Attractions-g60763-Activities-New_York_City_New_York.html
+Chicago*****http://www.tripadvisor.com/Attractions-g35805-Activities-Chicago_Illinois.html

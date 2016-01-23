@@ -1,10 +1,19 @@
 from pattern.web import download
 from pymongo import MongoClient
-import re
+import re, time
 
 def get_attractions_from_page(url):
     attractions = []
-    html = download(url)
+
+    while True:
+        try:
+            html = download(url)
+        except:
+            print "Error Getting Attractions from page"
+            time.sleep(.5)
+            continue
+        break
+
     properties = html.split("property_title\">")
 
     for index in range(1, len(properties)):
@@ -42,7 +51,14 @@ def get_attraction(prop):
     return attraction
 
 def get_attraction_details(attraction_url):
-    html = download(attraction_url)
+    while True:
+        try:
+            html = download(attraction_url)
+        except:
+            print "Error getting attraction details"
+            time.sleep(.5)
+            continue
+        break
 
     # get the descriptions of the location in the ugliest line of code I've ever written
     try:
@@ -72,12 +88,19 @@ def get_attraction_details(attraction_url):
     return list_details
 
 def get_review_count(reviews):
-    review_count = reviews.split(" reviews")[0]
+    review_count = reviews.lower().split(" review")[0]
     review_count_clean = re.sub("[^0-9]", "", review_count)
     return int(review_count_clean)
 
 def get_all_pages(url):
-    html = download(url)
+    while True:
+        try:
+            html = download(url)
+        except:
+            time.sleep(.5)
+            print "Error getting all the pages"
+            continue
+        break
 
     # get the page numbers element
     pageNumbers = html.split("class=\"pageNumbers\">")[1]
@@ -92,7 +115,7 @@ def get_all_pages(url):
 
     urls = []
 
-    for number in range(min_page, max_page+30, 30):
+    for number in range(min_page, 90+30, 30):
         urls.append(url_parts[0] + str(number) + url_parts[1])
 
     return urls
@@ -120,12 +143,21 @@ attractions = client.cities.attractions
 for index in range(0, len(cities)):
     info = cities[index].split("*****")
 
+    print "Working on... " + info[0] + " (" + str(index+1) + " of " + str(len(cities)) + ")"
+
     all_attractions = []
     pages = get_all_pages(info[1])
 
     for page in pages:
         all_attractions = all_attractions + get_attractions_from_page(page)
 
-    attractions.insert({"city":info[0], "attractions":all_attractions})
+    try:
+        attractions.insert({"city":info[0], "attractions":all_attractions})
+    except OverflowError:
+        print "Encountered Error... dumping to file"
+        f2 = open(info[0] + ".txt", "w")
+        f2.write(str(all_attractions))
+        f2.close()
+
     print "Completed " + str(index+1) + " of " + str(len(cities))
 
