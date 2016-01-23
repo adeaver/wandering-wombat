@@ -1,5 +1,6 @@
 from flask import request, Flask
 from wombats_db import Wombats_Db
+from scrape_locations import db_setup
 import json, re
 
 db_manager = Wombats_Db()
@@ -50,6 +51,14 @@ def get_locations():
         final["data"] = dict()
 
         return str(final)
+
+@app.route('/db/setup', methods=["GET"])
+def setup_db():
+    try:
+        db = db_setup()
+        return "Setup"
+    except:
+        return "Failed"
 
 if __name__ == "__main__":
     app.run(debug=True)

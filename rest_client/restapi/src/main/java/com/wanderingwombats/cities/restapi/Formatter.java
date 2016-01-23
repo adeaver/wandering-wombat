@@ -15,7 +15,7 @@ public class Formatter {
 	}
 	
 	public static CityInfo[] getCityInfoFromResp(Map<String, Object> response) {
-		String[] cities = Formatter.stringArrayFromObjectArray((Object[]) response.get("cities"));
+		String[] cities = Formatter.getCityNamesFromResp(response);
 		CityInfo[] cityInfoCollection = new CityInfo[cities.length];
 		
 		for(int index = 0; index < cityInfoCollection.length; index++) {
@@ -25,5 +25,10 @@ public class Formatter {
 		}
 		
 		return cityInfoCollection;
+	}
+	
+	public static String[] getCityNamesFromResp(Map<String, Object> response) {
+		return Formatter.stringArrayFromObjectArray((Object[]) response.get("cities"));
+
 	}
 }

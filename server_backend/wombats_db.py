@@ -9,6 +9,10 @@ class Wombats_Db():
         self.CLIENT = MongoClient()
         self.DB = self.CLIENT.wombats.points
 
+    def is_empty(self):
+        cursor = self.DB.find()
+        return cursor.count() == 0
+
     def get_from_category(self, categories):
         query = self.DB.find({"categories":{"$in":categories}})
         return query
