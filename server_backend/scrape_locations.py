@@ -1,11 +1,11 @@
 from pattern.web import download
+import re
 
 def get_attractions_from_page(url):
     attractions = []
     html = download(url)
     properties = html.split("property_title\">")
 
- 
     for index in range(1, len(properties)):
         attraction = get_attraction(properties[index])
         attraction['categories'] = get_attraction_details(attraction["url"])
@@ -25,12 +25,18 @@ def get_attraction(prop):
     # get the attraction_name
     attraction_name = first_tag.split(">")[1]
 
+    try:
+        review_count = get_review_count(prop.split("#REVIEWS\">")[1])
+    except:
+        review_count = 0
+
     # get attraction url
     attraction_url = first_tag.split("href=")[1].split("\"")[1]
 
     # put the data into attraction
     attraction["name"] = attraction_name
     attraction["url"] = "http://www.tripadvisor.com" + attraction_url
+    attraction["review_count"] = review_count
 
     return attraction
 
@@ -63,6 +69,11 @@ def get_attraction_details(attraction_url):
                 list_details.append(clean_title)
 
     return list_details
+
+def get_review_count(reviews):
+    review_count = reviews.split(" reviews")[0]
+    review_count_clean = re.sub("[^0-9]", "", review_count)
+    return int(review_count_clean)
 
 def get_all_pages(url):
     html = download(url)
@@ -100,9 +111,6 @@ def get_base_url(page):
 
 
 pages = get_all_pages("http://www.tripadvisor.com/Attractions-g60763-Activities-New_York_City_New_York.html")
+
 for page in pages:
     print get_attractions_from_page(page)
-# print get_attractions_from_page("http://www.tripadvisor.com/Attractions-g60763-Activities-New_York_City_New_York.html")
-# f = open("ny.txt", "w")
-# f.write(properties[len(properties)-1])
-# f.close()
