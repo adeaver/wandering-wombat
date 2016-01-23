@@ -153,3 +153,5 @@ for index in range(0, len(cities)):
 
     print "Completed " + str(index+1) + " of " + str(len(cities))
 
+# Remove problematic entry
+points.remove({"_id":"http://www.tripadvisor.com/Attraction_Review-g44551-d8528148-Reviews-Kirkwood_Farmers_Market-Kirkwood_Saint_Louis_Missouri.html"})

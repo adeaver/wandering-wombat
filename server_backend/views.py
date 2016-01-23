@@ -9,7 +9,7 @@ app = Flask(__name__)
 def get_locations():
     try:
         # Preferences, Number of Cities
-        category_parameters = [re.sub("And", "&", arg.title()) for arg in request.args.get("q").split(",")]
+        category_parameters = [re.sub("and", "&", arg.title()) for arg in request.args.get("q").split(",")]
         number_of_cities = int(request.args.get("count")) if "count" in request.args else -1
 
         cursor = db_manager.get_from_category(category_parameters)

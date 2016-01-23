@@ -21,4 +21,23 @@ public class RequestClientTest extends TestCase {
 		
 		assertEquals("America is great", returnValue.get("response").toString());
 	}
+	
+	@Test
+	public void testAllConnections() throws JSONException {
+		String[] channels = {DefaultValues.ARCHITECTURE,
+				DefaultValues.RELIGION, DefaultValues.HISTORY, DefaultValues.SPORTS,
+				DefaultValues.MUSEUMS, DefaultValues.ART, DefaultValues.SCIENCE,
+				DefaultValues.NATURE, DefaultValues.THEATER, DefaultValues.SHOPPING};
+		
+		for(String channel : channels) {
+			System.err.println(channel);
+			HashMap<String, Object> returnValue = (HashMap<String, Object>) requestClient.makeRequest(channel);
+			
+			try {
+				assertEquals("America is great", returnValue.get("response").toString());
+			} catch(Exception e) {
+				e.printStackTrace();
+			}
+		}
+	}
 }

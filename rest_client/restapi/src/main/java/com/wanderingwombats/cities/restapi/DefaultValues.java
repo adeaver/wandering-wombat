@@ -3,7 +3,7 @@ package com.wanderingwombats.cities.restapi;
 public class DefaultValues {
 	public static final String BASE_URL = "http://127.0.0.1:5000";
 	
-	public static final String LANDMARKS = "Points of Interest and Landmarks";
+	public static final String LANDMARKS = "Sights and Landmarks";
 	public static final String ARCHITECTURE = "Architectural Buildings";
 	public static final String RELIGION = "Religious Sites,Churches and Cathedrals";
 	public static final String HISTORY = "Monuments and Statues,Historic Sites,History Museums";

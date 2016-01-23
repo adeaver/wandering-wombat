@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 from pymongo import MongoClient
 import re
 
@@ -21,7 +23,7 @@ class Wombats_Db():
 
         for item in old_list:
             if(item != token):
-                new_list.append(re.sub("\'", "&#39;", item))
+                new_list.append(self.clean(item))
                 token = item
 
         return new_list
@@ -57,3 +59,9 @@ class Wombats_Db():
                 j += 1
 
         return data
+
+    def clean(self, inp):
+        output = re.sub("\'", "", inp)
+        output = re.sub(":", "-", output)
+
+        return output

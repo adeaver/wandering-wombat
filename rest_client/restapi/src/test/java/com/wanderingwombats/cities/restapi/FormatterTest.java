@@ -22,6 +22,6 @@ public class FormatterTest extends TestCase {
 		assertEquals("America is great", response.get("response").toString());
 		CityInfo[] respCities = Formatter.getCityInfoFromResp(response);
 		
-		assertEquals(17, respCities.length);
+		assertEquals(16, respCities.length);
 	}
 }
