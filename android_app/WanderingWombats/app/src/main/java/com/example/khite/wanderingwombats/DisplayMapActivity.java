@@ -45,6 +45,7 @@ public class DisplayMapActivity extends AppCompatActivity {
         // Get city list from previous activity
         Bundle extras = getIntent().getExtras();
         arduinoInfo = extras.getIntArray("bluetoothList");
+        Log.e("MyTag", Arrays.toString(arduinoInfo));
 
         Log.e("myTag", Arrays.toString(arduinoInfo));
 
@@ -112,12 +113,8 @@ public class DisplayMapActivity extends AppCompatActivity {
                 Log.e("myTag", "Registered Click Event");
                 mConnectThread = new ConnectThread(mmDevice);
                 Log.e("myTag", "Created Connect Thread");
-                mConnectThread.run();
+                mConnectThread.start();
                 Log.e("myTag", "Started Connect Thread");
-
-                for (int i = 0; i < arduinoInfo.length; i++){
-                    mConnectedThread.write(toBytes(arduinoInfo[i]));
-                }
             }
         });
     }
@@ -142,6 +139,51 @@ public class DisplayMapActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    // Connect Thread
+    private class ConnectThread extends Thread {
+        private final BluetoothSocket mmSocket;
+        private final BluetoothDevice mmDevice;
+        private final UUID MY_UUID = UUID.fromString("00001101-0000-1000-8000-00805f9b34fb");
+        public ConnectThread(BluetoothDevice device) {
+            BluetoothSocket tmp = null;
+            mmDevice = device;
+            try {
+                tmp = device.createInsecureRfcommSocketToServiceRecord(MY_UUID);
+            } catch (IOException e) { }
+            mmSocket = tmp;
+
+        }
+        public void run() {
+            Log.e("MyTag", "Thread Running");
+
+            // CURRENTLY FAILING HERE
+            mBluetoothAdapter.cancelDiscovery();
+            try {
+                Log.e("MyTag", "Attempt Socket Connection");
+                mmSocket.connect();
+            } catch (IOException connectException) {
+                try {
+                    Log.e("MyTag", "Attempting Socket close");
+                    mmSocket.close();
+                } catch (IOException closeException) {
+                }
+                return;
+            }
+            // NOT WORKING HERE
+            Log.e("MyTag", "Connected Thread");
+            mConnectedThread = new ConnectedThread(mmSocket);
+            mConnectedThread.start();
+            for (int i = 0; i < arduinoInfo.length; i++){
+                mConnectedThread.write(toBytes(arduinoInfo[i]));
+            }
+        }
+        public void cancel() {
+            try {
+                mmSocket.close();
+            } catch (IOException e) { }
+        }
     }
 
     // Connected Thread
@@ -194,38 +236,4 @@ public class DisplayMapActivity extends AppCompatActivity {
         }
     }
 
-    // Connect Thread
-    private class ConnectThread extends Thread {
-        private final BluetoothSocket mmSocket;
-        private final BluetoothDevice mmDevice;
-        private final UUID MY_UUID = UUID.fromString("00001101-0000-1000-8000-00805f9b34fb");
-        public ConnectThread(BluetoothDevice device) {
-            BluetoothSocket tmp = null;
-            mmDevice = device;
-            try {
-                tmp = device.createInsecureRfcommSocketToServiceRecord(MY_UUID);
-            } catch (IOException e) { }
-            mmSocket = tmp;
-
-        }
-        public void run() {
-            mBluetoothAdapter.cancelDiscovery();
-            try {
-                mmSocket.connect();
-            } catch (IOException connectException) {
-                try {
-                    mmSocket.close();
-                } catch (IOException closeException) {
-                }
-                return;
-            }
-            mConnectedThread = new ConnectedThread(mmSocket);
-            mConnectedThread.start();
-        }
-        public void cancel() {
-            try {
-                mmSocket.close();
-            } catch (IOException e) { }
-        }
-    }
 }
