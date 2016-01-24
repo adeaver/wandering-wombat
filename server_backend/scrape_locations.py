@@ -4,29 +4,54 @@ import re, time
 
 class db_setup():
 
-    def __init__(self):
-        f = open("city_urls.txt", "r")
-        cities = f.readlines()
+    def get_review_count(self, reviews):
+        review_count = reviews.lower().split(" review")[0]
+        review_count_clean = re.sub("[^0-9]", "", review_count)
+        return int(review_count_clean)
 
-        client = MongoClient()
-        points = client.wombats.points
+    def clean_href(self, tag):
+        return tag.split("href=")[1].split("\"")[1]
 
-        for index in range(0, len(cities)):
-            info = cities[index].split("*****")
+    def get_num(self, page):
+        return int(page.split("oa")[1].split("-")[0])
 
-            print "Working on... " + info[0] + " (" + str(index+1) + " of " + str(len(cities)) + ")"
+    def get_base_url(self, page):
+        parts = page.split("oa")
+        first_part = "http://www.tripadvisor.com" + parts[0] + "oa"
+        second_part = "-" + parts[1].split("-")[1]
 
-            pages = get_all_pages(info[1])
+        return [first_part, second_part]
 
-            for page in pages:
-                get_attractions_from_page(page, info[0], points)
+    def get_all_pages(self, url):
+        while True:
+            try:
+                html = download(url)
+            except:
+                time.sleep(.5)
+                print "Error getting all the pages"
+                continue
+            break
 
-            print "Completed " + str(index+1) + " of " + str(len(cities))
+        # get the page numbers element
+        pageNumbers = html.split("class=\"pageNumbers\">")[1]
+        pageNumbers = pageNumbers.split("</div>")[0]
 
-        # Remove problematic entry
-        points.remove({"_id":"http://www.tripadvisor.com/Attraction_Review-g44551-d8528148-Reviews-Kirkwood_Farmers_Market-Kirkwood_Saint_Louis_Missouri.html"})
+        # get a list of all the pages
+        pages = pageNumbers.split("<")[2:]
+        
+        min_page = self.get_num(self.clean_href(pages[1]))
+        max_page = self.get_num(self.clean_href(pages[len(pages)-2]))
+        url_parts = self.get_base_url(self.clean_href(pages[1]))
 
-    def get_attractions_from_page(url, city, client):
+        urls = []
+
+        for number in range(min_page, 90+30, 30):
+            urls.append(url_parts[0] + str(number) + url_parts[1])
+
+        return urls
+
+
+    def get_attractions_from_page(self, url, city, client):
 
         while True:
             try:
@@ -40,15 +65,15 @@ class db_setup():
         properties = html.split("property_title\">")
 
         for index in range(1, len(properties)):
-            attraction = get_attraction(properties[index])
-            attraction['categories'] = get_attraction_details(attraction["url"], attraction["name"])
+            attraction = self.get_attraction(properties[index])
+            attraction['categories'] = self.get_attraction_details(attraction["url"], attraction["name"])
 
             if(len(attraction['categories']) > 0):
                 client.insert({"city":city, "name":attraction["name"], "_id":attraction["url"], "review_count":attraction["review_count"], "categories":attraction["categories"]})
             else:
                 print "Error on: " + attraction["name"]
 
-    def get_attraction(prop):
+    def get_attraction(self, prop):
         # define attraction container
         attraction = dict()
 
@@ -59,7 +84,7 @@ class db_setup():
         attraction_name = first_tag.split(">")[1]
 
         try:
-            review_count = get_review_count(prop.split("#REVIEWS\">")[1])
+            review_count = self.get_review_count(prop.split("#REVIEWS\">")[1])
         except:
             review_count = 0
 
@@ -73,7 +98,7 @@ class db_setup():
 
         return attraction
 
-    def get_attraction_details(attraction_url, attraction_name):
+    def get_attraction_details(self, attraction_url, attraction_name):
         while True:
             try:
                 html = download(attraction_url)
@@ -112,48 +137,24 @@ class db_setup():
 
         return list_details
 
-    def get_review_count(reviews):
-        review_count = reviews.lower().split(" review")[0]
-        review_count_clean = re.sub("[^0-9]", "", review_count)
-        return int(review_count_clean)
+    def setup_database(self):
+        f = open("city_urls.txt", "r")
+        cities = f.readlines()
 
-    def get_all_pages(url):
-        while True:
-            try:
-                html = download(url)
-            except:
-                time.sleep(.5)
-                print "Error getting all the pages"
-                continue
-            break
+        client = MongoClient()
+        points = client.wombats.points
 
-        # get the page numbers element
-        pageNumbers = html.split("class=\"pageNumbers\">")[1]
-        pageNumbers = pageNumbers.split("</div>")[0]
+        for index in range(0, len(cities)):
+            info = cities[index].split("*****")
 
-        # get a list of all the pages
-        pages = pageNumbers.split("<")[2:]
-        
-        min_page = get_num(clean_href(pages[1]))
-        max_page = get_num(clean_href(pages[len(pages)-2]))
-        url_parts = get_base_url(clean_href(pages[1]))
+            print "Working on... " + info[0] + " (" + str(index+1) + " of " + str(len(cities)) + ")"
 
-        urls = []
+            pages = self.get_all_pages(info[1])
 
-        for number in range(min_page, 90+30, 30):
-            urls.append(url_parts[0] + str(number) + url_parts[1])
+            for page in pages:
+                self.get_attractions_from_page(page, info[0], points)
 
-        return urls
+            print "Completed " + str(index+1) + " of " + str(len(cities))
 
-    def clean_href(tag):
-        return tag.split("href=")[1].split("\"")[1]
-
-    def get_num(page):
-        return int(page.split("oa")[1].split("-")[0])
-
-    def get_base_url(page):
-        parts = page.split("oa")
-        first_part = "http://www.tripadvisor.com" + parts[0] + "oa"
-        second_part = "-" + parts[1].split("-")[1]
-
-        return [first_part, second_part]
+        # Remove problematic entry
+        points.remove({"_id":"http://www.tripadvisor.com/Attraction_Review-g44551-d8528148-Reviews-Kirkwood_Farmers_Market-Kirkwood_Saint_Louis_Missouri.html"})

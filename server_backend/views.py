@@ -54,11 +54,12 @@ def get_locations():
 
 @app.route('/db/setup', methods=["GET"])
 def setup_db():
-    try:
+    if(db_manager.is_empty()):
         db = db_setup()
-        return "Setup"
-    except:
-        return "Failed"
+        db.setup_database()
+        return "Successful"
+    else:
+        return "DB already exists"
 
 if __name__ == "__main__":
     app.run(debug=True)
