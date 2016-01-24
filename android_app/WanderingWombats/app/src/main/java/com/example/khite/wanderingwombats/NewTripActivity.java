@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 public class NewTripActivity extends AppCompatActivity {
 
@@ -49,8 +50,16 @@ public class NewTripActivity extends AppCompatActivity {
         Spinner dropdownNum = (Spinner) findViewById(R.id.spinner);
         numCities = dropdownNum.getSelectedItem().toString();
 
-        // Open trip display activity
+        // Calculating trip message
+        Toast.makeText(NewTripActivity.this, "Calculating Trip ...",
+                Toast.LENGTH_LONG).show();
+
+        // Request trip from server, pass into array of location values for arduino and
+        int[] tripArray = {7, 2, 5, 12, 14};
+
+        // Open trip display activity and pass through trip information
         Intent intent = new Intent(this, TripDisplayActivity.class);
+        intent.putExtra("tripCities", tripArray);
         startActivity(intent);
     }
 

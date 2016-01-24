@@ -6,17 +6,32 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.TextView;
+
+import java.lang.reflect.Array;
+import java.util.Arrays;
 
 public class TripDisplayActivity extends AppCompatActivity {
+
+    int[] citiesArray;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_trip_display);
+
+        // Get trip cities array from previous activity
+        Bundle extras = getIntent().getExtras();
+        citiesArray = extras.getIntArray("tripCities");
+
+        // Display cities info
+        TextView t = (TextView) findViewById(R.id.textView5);
+        t.setText(Arrays.toString(citiesArray));
     }
 
     public void openDisplayMapActivity(View view){
         Intent intent = new Intent(this, DisplayMapActivity.class);
+        intent.putExtra("bluetoothList", citiesArray);
         startActivity(intent);
     }
 

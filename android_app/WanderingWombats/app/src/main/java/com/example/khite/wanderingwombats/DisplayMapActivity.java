@@ -19,7 +19,9 @@ import android.widget.Toast;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.UUID;
 
 import java.util.Set;
@@ -32,12 +34,19 @@ public class DisplayMapActivity extends AppCompatActivity {
     private ConnectThread mConnectThread;
     private ConnectedThread mConnectedThread;
     ListView lv;
+    int[] arduinoInfo;
     //String deviceName = "Adafruit Bluefruit LE B0AC";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_display_map);
+
+        // Get city list from previous activity
+        Bundle extras = getIntent().getExtras();
+        arduinoInfo = extras.getIntArray("bluetoothList");
+
+        Log.e("myTag", Arrays.toString(arduinoInfo));
 
         mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
         lv = (ListView)findViewById(R.id.listView);
@@ -54,6 +63,18 @@ public class DisplayMapActivity extends AppCompatActivity {
             }
         }
         Log.e("myTag", "Finished getting devices");
+    }
+
+    byte[] toBytes(int i)
+    {
+        byte[] result = new byte[4];
+
+        result[0] = (byte) (i >> 24);
+        result[1] = (byte) (i >> 16);
+        result[2] = (byte) (i >> 8);
+        result[3] = (byte) (i /*>> 0*/);
+
+        return result;
     }
 
     Handler mHandler = new Handler() {
@@ -91,8 +112,12 @@ public class DisplayMapActivity extends AppCompatActivity {
                 Log.e("myTag", "Registered Click Event");
                 mConnectThread = new ConnectThread(mmDevice);
                 Log.e("myTag", "Created Connect Thread");
-                mConnectThread.start();
+                mConnectThread.run();
                 Log.e("myTag", "Started Connect Thread");
+
+                for (int i = 0; i < arduinoInfo.length; i++){
+                    mConnectedThread.write(toBytes(arduinoInfo[i]));
+                }
             }
         });
     }
@@ -181,6 +206,7 @@ public class DisplayMapActivity extends AppCompatActivity {
                 tmp = device.createInsecureRfcommSocketToServiceRecord(MY_UUID);
             } catch (IOException e) { }
             mmSocket = tmp;
+
         }
         public void run() {
             mBluetoothAdapter.cancelDiscovery();
@@ -189,7 +215,8 @@ public class DisplayMapActivity extends AppCompatActivity {
             } catch (IOException connectException) {
                 try {
                     mmSocket.close();
-                } catch (IOException closeException) { }
+                } catch (IOException closeException) {
+                }
                 return;
             }
             mConnectedThread = new ConnectedThread(mmSocket);
