@@ -4,6 +4,27 @@ import re, time
 
 class db_setup():
 
+    def __init__(self):
+        self.city_info = [
+        "Charleston*****http://www.tripadvisor.com/Attractions-g54171-Activities-Charleston_South_Carolina.html",
+        "Las Vegas*****http://www.tripadvisor.com/Attractions-g45963-Activities-Las_Vegas_Nevada.html",
+        "Seattle*****http://www.tripadvisor.com/Attractions-g60878-Activities-Seattle_Washington.html",
+        "San Francisco*****http://www.tripadvisor.com/Attractions-g60713-Activities-San_Francisco_California.html",
+        "Washington D.C.*****http://www.tripadvisor.com/Attractions-g28970-Activities-Washington_DC_District_of_Columbia.html",
+        "New Orleans*****http://www.tripadvisor.com/Attractions-g60864-Activities-New_Orleans_Louisiana.html",
+        "St. Louis*****http://www.tripadvisor.com/Attractions-g44881-Activities-Saint_Louis_Missouri.html",
+        "Sedona*****http://www.tripadvisor.com/Attractions-g31352-Activities-Sedona_Arizona.html",
+        "Los Angeles*****http://www.tripadvisor.com/Attractions-g32655-Activities-Los_Angeles_California.html",
+        "Philadelphia*****http://www.tripadvisor.com/Attractions-g60795-Activities-Philadelphia_Pennsylvania.html",
+        "Phoenix*****http://www.tripadvisor.com/Attractions-g31310-Activities-Phoenix_Arizona.html",
+        "Denver*****http://www.tripadvisor.com/Attractions-g33388-Activities-Denver_Colorado.html",
+        "Salt Lake City*****http://www.tripadvisor.com/Attractions-g60922-Activities-Salt_Lake_City_Utah.html",
+        "Grand Canyon*****http://www.tripadvisor.com/Attractions-g143028-Activities-Grand_Canyon_National_Park_Arizona.html",
+        "Yosemite*****http://www.tripadvisor.com/Attractions-g61000-Activities-Yosemite_National_Park_California.html",
+        "Orlando*****http://www.tripadvisor.com/Attractions-g34515-Activities-Orlando_Florida.html",
+        "New York City*****http://www.tripadvisor.com/Attractions-g60763-Activities-New_York_City_New_York.html",
+        "Chicago*****http://www.tripadvisor.com/Attractions-g35805-Activities-Chicago_Illinois.html"]
+
     def get_review_count(self, reviews):
         review_count = reviews.lower().split(" review")[0]
         review_count_clean = re.sub("[^0-9]", "", review_count)
@@ -138,23 +159,21 @@ class db_setup():
         return list_details
 
     def setup_database(self):
-        f = open("city_urls.txt", "r")
-        cities = f.readlines()
 
         client = MongoClient()
         points = client.wombats.points
 
-        for index in range(0, len(cities)):
-            info = cities[index].split("*****")
+        for index in range(0, len(self.city_info)):
+            info = self.city_info[index].split("*****")
 
-            print "Working on... " + info[0] + " (" + str(index+1) + " of " + str(len(cities)) + ")"
+            print "Working on... " + info[0] + " (" + str(index+1) + " of " + str(len(self.city_info)) + ")"
 
             pages = self.get_all_pages(info[1])
 
             for page in pages:
                 self.get_attractions_from_page(page, info[0], points)
 
-            print "Completed " + str(index+1) + " of " + str(len(cities))
+            print "Completed " + str(index+1) + " of " + str(len(self.city_info))
 
         # Remove problematic entry
         points.remove({"_id":"http://www.tripadvisor.com/Attraction_Review-g44551-d8528148-Reviews-Kirkwood_Farmers_Market-Kirkwood_Saint_Louis_Missouri.html"})
