@@ -13,7 +13,7 @@ import java.util.Arrays;
 
 public class TripDisplayActivity extends AppCompatActivity {
 
-    int[] citiesArray;
+    String[] citiesArray;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -22,7 +22,7 @@ public class TripDisplayActivity extends AppCompatActivity {
 
         // Get trip cities array from previous activity
         Bundle extras = getIntent().getExtras();
-        citiesArray = extras.getIntArray("tripCities");
+        citiesArray = extras.getStringArray("tripCities");
 
         // Display cities info
         TextView t = (TextView) findViewById(R.id.textView5);

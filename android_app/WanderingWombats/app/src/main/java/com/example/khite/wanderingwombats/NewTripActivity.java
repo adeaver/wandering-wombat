@@ -1,6 +1,7 @@
 package com.example.khite.wanderingwombats;
 
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -11,8 +12,16 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.wanderingwombats.cities.restapi.DefaultValues;
+import com.wanderingwombats.cities.restapi.Formatter;
+import com.wanderingwombats.cities.restapi.RequestClient;
+
+import java.util.HashMap;
+import java.util.Map;
+
 public class NewTripActivity extends AppCompatActivity {
 
+    RequestClient rc = new RequestClient();
     EditText nameEdit;
     String tripName;
     String tripType;
@@ -45,6 +54,18 @@ public class NewTripActivity extends AppCompatActivity {
         // Get trip type
         Spinner dropdown = (Spinner) findViewById(R.id.spinner1);
         tripType = dropdown.getSelectedItem().toString();
+        HashMap<String, String> map = new HashMap<String, String>();
+        map.put("Art", DefaultValues.ART);
+        map.put("Religion", DefaultValues.RELIGION);
+        map.put("Landmarks", DefaultValues.LANDMARKS);
+        map.put("Architecture", DefaultValues.ARCHITECTURE);
+        map.put("History", DefaultValues.HISTORY);
+        map.put("Sports", DefaultValues.SPORTS);
+        map.put("Museums", DefaultValues.MUSEUMS);
+        map.put("Science", DefaultValues.SCIENCE);
+        map.put("Nature", DefaultValues.NATURE);
+        map.put("Theater", DefaultValues.THEATER);
+        map.put("Shopping", DefaultValues.SHOPPING);
 
         // Get number of cities
         Spinner dropdownNum = (Spinner) findViewById(R.id.spinner);
@@ -55,11 +76,20 @@ public class NewTripActivity extends AppCompatActivity {
                 Toast.LENGTH_LONG).show();
 
         // Request trip from server, pass into array of location values for arduino and
-        int[] tripArray = {7, 2, 5, 12, 14};
+        Map<String, Object> response = new HashMap<String, Object>();
+        try{
+            RequestThread rt = new RequestThread();
+            response = rt.execute(map.get(tripType), numCities).get();
+        }
+        catch(Exception e){
+            e.toString();
+        }
+
+        String[] cityNames = Formatter.getCityNamesFromResp(response);
 
         // Open trip display activity and pass through trip information
         Intent intent = new Intent(this, TripDisplayActivity.class);
-        intent.putExtra("tripCities", tripArray);
+        intent.putExtra("tripCities", cityNames);
         startActivity(intent);
     }
 
@@ -83,5 +113,12 @@ public class NewTripActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    public class RequestThread extends AsyncTask<String, Void, Map<String, Object>> {
+        @Override
+        protected Map<String, Object> doInBackground(String... strings) {
+            return rc.makeRequest(strings[0], Integer.parseInt(strings[1]));
+        }
     }
 }
