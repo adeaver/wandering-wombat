@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -72,25 +73,31 @@ public class NewTripActivity extends AppCompatActivity {
         numCities = dropdownNum.getSelectedItem().toString();
 
         // Calculating trip message
-        Toast.makeText(NewTripActivity.this, "Calculating Trip ...",
-                Toast.LENGTH_LONG).show();
+//        Toast.makeText(NewTripActivity.this, "Calculating Trip ...",
+//                Toast.LENGTH_LONG).show();
 
         // Request trip from server, pass into array of location values for arduino and
         Map<String, Object> response = new HashMap<String, Object>();
         try{
+            Log.d("TRYING", "Trying request");
             RequestThread rt = new RequestThread();
             response = rt.execute(map.get(tripType), numCities).get();
+            Log.d("response", response.get("response").toString());
         }
         catch(Exception e){
-            e.toString();
+            e.printStackTrace();
         }
 
-        String[] cityNames = Formatter.getCityNamesFromResp(response);
+        if(response.get("response").toString() != "You got Trumped") {
+            String[] cityNames = Formatter.getCityNamesFromResp(response);
 
-        // Open trip display activity and pass through trip information
-        Intent intent = new Intent(this, TripDisplayActivity.class);
-        intent.putExtra("tripCities", cityNames);
-        startActivity(intent);
+            // Open trip display activity and pass through trip information
+            Intent intent = new Intent(this, TripDisplayActivity.class);
+            intent.putExtra("tripCities", cityNames);
+            startActivity(intent);
+        } else {
+            Toast.makeText(this, "Trump does not want you to see this", Toast.LENGTH_LONG);
+        }
     }
 
     @Override
