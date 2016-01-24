@@ -38,7 +38,7 @@ def get_locations():
             city_list.sort()
             cities[key] = db_manager.unique(city_list)
 
-        cities["cities"] = db_manager.order_cities_by_distance(db_manager.unique(cities.keys()))
+        cities["cities"] = db_manager.get_best_route(db_manager.unique(cities.keys()))
 
         final = dict()
         final["response"] = "America is great"

@@ -3,8 +3,6 @@
 from pymongo import MongoClient
 from haversine import haversine
 import re
-from Dijkstras import Graph, Vertex
-import heapq
 
 
 class Wombats_Db():
@@ -90,33 +88,41 @@ class Wombats_Db():
 
             return self.merge(1, data1, data2)
 
-
-    def order_cities_by_distance(self, cities):
+    def get_best_route(self, cities):
         fastest_route = []
-        distance = 1000000
+        fastest_distance = 0
 
-        for start in range(0, len(cities)):
-            first_city = cities[start]
-            distance_from_first = [[first_city, 0]]
+        for index in range(0, len(cities)):
+            without_first_city = [cities[x] for x in range(len(cities)) if x != index]
+            route_info = [[cities[index], 0]] + self.order_cities_by_distance(cities[index], without_first_city)
 
-            first_coords = self.COORDINATES[first_city]
+            distance = sum([item[1] for item in route_info])
+            route = [item[0] for item in route_info]
 
-            for index in range(0, len(cities)):
-                if(index == start):
-                    continue
-                coords = self.COORDINATES[cities[index]]
-                distance_between = haversine(coords, first_coords, miles=True)
-
-                distance_from_first.append([cities[index], distance_between])
-
-
-            sortedarray = self.merge_sort_distances(distance_from_first)
-
-            total_distance = sum([item[1] for item in sortedarray])
-
-            if(total_distance < distance):
-                distance = total_distance
-                fastest_route = [item[0] for item in sortedarray]
-                fastest_route.reverse()
+            if(len(fastest_route) == 0 or fastest_distance > distance):
+                fastest_route = route
+                fastest_distance = distance
 
         return fastest_route
+
+    def order_cities_by_distance(self, last_city, cities):
+        coords = self.COORDINATES[last_city]
+        coords_test = self.COORDINATES[cities[0]]
+
+        closest_distance = haversine(coords, coords_test, miles=True)
+        closest_index = 0 
+
+        if(len(cities) == 1):
+            return [[cities[0], closest_distance]]
+
+        for index in range(1, len(cities)):
+            coords_test = self.COORDINATES[cities[index]]
+            distance = haversine(coords, coords_test, miles=True)
+
+            if(closest_distance>distance):
+                closest_distance = distance
+                closest_index = index
+
+        next_city = cities.pop(closest_index)
+
+        return [[next_city, closest_distance]] + self.order_cities_by_distance(next_city, cities)
