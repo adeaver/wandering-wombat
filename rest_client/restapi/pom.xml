@@ -4,7 +4,7 @@
 
   <groupId>com.wanderingwombats.cities</groupId>
   <artifactId>restapi</artifactId>
-  <version>0.0.1-SNAPSHOT</version>
+  <version>1.0.0</version>
   <packaging>jar</packaging>
 
   <name>restapi</name>
@@ -25,7 +25,7 @@
 		<groupId>org.json</groupId>
 		<artifactId>json</artifactId>
 		<version>20090211</version>
-		<scope>runtime</scope>
+		<scope>compile</scope>
 	</dependency>
   </dependencies>
 </project>
