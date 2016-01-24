@@ -1,7 +1,7 @@
 from flask import request, Flask
 from wombats_db import Wombats_Db
 from scrape_locations import db_setup
-import json, re
+import json, re, sys
 
 db_manager = Wombats_Db()
 app = Flask(__name__)
@@ -38,17 +38,18 @@ def get_locations():
             city_list.sort()
             cities[key] = db_manager.unique(city_list)
 
-        cities["cities"] = cities.keys()
+        cities["cities"] = db_manager.order_cities_by_distance(db_manager.unique(cities.keys()))
 
         final = dict()
         final["response"] = "America is great"
         final["data"] = cities
 
         return str(final)
-    except:
+    except Exception as e:
         final = dict()
         final["response"] = "You've been Trumped"
         final["data"] = dict()
+        final["error"] = e
 
         return str(final)
 
